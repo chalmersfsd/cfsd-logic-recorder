@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+    cfsd-recorder:
+        image: lowitz/recorder:v0.0.0
+        network_mode: "host"
+        volumes:
+            - /home/cfsd:/opt/writeTo
+        command: "recorder --cid=219 --freq=2 --verbose --scriptPath=/opt/wrieTo/recordingScript/ --recordingsPath=/opt/writeTo/recordings/"
