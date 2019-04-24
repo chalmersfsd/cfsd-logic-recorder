@@ -91,29 +91,21 @@ void Recorder::startRecording()
 
   std::cout << "Up command: " << startRecCommand << std::endl;
   
-  
+  // Runs a script for starting the recording in specified path
   std::cout << "Starting recording... " << system(startRecCommand.c_str()) << " done." << std::endl;
 
   cluon::data::TimeStamp sampleTime = cluon::time::now();
-  /*
-  opendlv::proxy::SwitchStateRequest ebsSpeaker;
-  ebsSpeaker.state(1);
-  m_od4.send(ebsSpeaker, sampleTime, 1044);
-
-  sleep(2);
-
-  ebsSpeaker.state(0);
-  m_od4.send(ebsSpeaker, sampleTime, 1044);
-  */
 
 
+  // Flash the ASSI to green when starting recording
   opendlv::proxy::PulseWidthModulationRequest msgPwm;
-  m_od4.send(msgPwm.dutyCycleNs(0U), sampleTime, 1300);
-  m_od4.send(msgPwm.dutyCycleNs(0U), sampleTime, 1320);
-  m_od4.send(msgPwm.dutyCycleNs(m_greenDuty), sampleTime, 1321);
+  m_od4.send(msgPwm.dutyCycleNs(0U), sampleTime, 1300); // Blue 
+  m_od4.send(msgPwm.dutyCycleNs(0U), sampleTime, 1320); // Red
+  m_od4.send(msgPwm.dutyCycleNs(1000000000U), sampleTime, 1321); // Green
 
   usleep(200000);
 
+  // Reset to settings from state machine
   m_od4.send(msgPwm.dutyCycleNs(m_blueDuty), sampleTime, 1300);
   m_od4.send(msgPwm.dutyCycleNs(m_redDuty), sampleTime, 1320);
   m_od4.send(msgPwm.dutyCycleNs(m_greenDuty), sampleTime, 1321);
@@ -133,17 +125,20 @@ void Recorder::stopRecording()
   stopRecCommand += m_scriptPath;
   stopRecCommand += "recorder-down.sh\" &";
 
+  // Runs a script for stopping the recording in specified path
   std::cout << "Stopping recording... " << system(stopRecCommand.c_str()) << " done." << std::endl;
 
   cluon::data::TimeStamp sampleTime = cluon::time::now();
 
+  // Flash the ASSI to red when stopping recording
   opendlv::proxy::PulseWidthModulationRequest msgPwm;
-  m_od4.send(msgPwm.dutyCycleNs(0U), sampleTime, 1300);
-  m_od4.send(msgPwm.dutyCycleNs(0U), sampleTime, 1320);
-  m_od4.send(msgPwm.dutyCycleNs(m_greenDuty), sampleTime, 1321);
+  m_od4.send(msgPwm.dutyCycleNs(0U), sampleTime, 1300); // Blue
+  m_od4.send(msgPwm.dutyCycleNs(1000000000U), sampleTime, 1320); // Red
+  m_od4.send(msgPwm.dutyCycleNs(0U), sampleTime, 1321); // Green
 
   usleep(200000);
 
+  // Reset to settings from state machine
   m_od4.send(msgPwm.dutyCycleNs(m_blueDuty), sampleTime, 1300);
   m_od4.send(msgPwm.dutyCycleNs(m_redDuty), sampleTime, 1320);
   m_od4.send(msgPwm.dutyCycleNs(m_greenDuty), sampleTime, 1321);
