@@ -112,7 +112,7 @@ void Recorder::startRecording()
   m_od4.send(msgPwm.dutyCycleNs(0U), sampleTime, 1320);
   m_od4.send(msgPwm.dutyCycleNs(m_greenDuty), sampleTime, 1321);
 
-  sleep(1);
+  usleep(200000);
 
   m_od4.send(msgPwm.dutyCycleNs(m_blueDuty), sampleTime, 1300);
   m_od4.send(msgPwm.dutyCycleNs(m_redDuty), sampleTime, 1320);
@@ -131,11 +131,22 @@ void Recorder::stopRecording()
   stopRecCommand += systemCommand;
   stopRecCommand += "\"sh ";
   stopRecCommand += m_scriptPath;
-  stopRecCommand += "recorder-up.sh\" &";
+  stopRecCommand += "recorder-down.sh\" &";
 
-  std::cout << "Stop rec command: " << stopRecCommand << std::endl;
-  
   std::cout << "Stopping recording... " << system(stopRecCommand.c_str()) << " done." << std::endl;
+
+  cluon::data::TimeStamp sampleTime = cluon::time::now();
+
+  opendlv::proxy::PulseWidthModulationRequest msgPwm;
+  m_od4.send(msgPwm.dutyCycleNs(0U), sampleTime, 1300);
+  m_od4.send(msgPwm.dutyCycleNs(0U), sampleTime, 1320);
+  m_od4.send(msgPwm.dutyCycleNs(m_greenDuty), sampleTime, 1321);
+
+  usleep(200000);
+
+  m_od4.send(msgPwm.dutyCycleNs(m_blueDuty), sampleTime, 1300);
+  m_od4.send(msgPwm.dutyCycleNs(m_redDuty), sampleTime, 1320);
+  m_od4.send(msgPwm.dutyCycleNs(m_greenDuty), sampleTime, 1321);
   
 }
 

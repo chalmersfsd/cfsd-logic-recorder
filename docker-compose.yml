@@ -5,5 +5,5 @@ services:
         image: lowitz/recorder:v0.0.0
         network_mode: "host"
         volumes:
-            - /home/cfsd:/opt/writeTo
-        command: "recorder --cid=219 --freq=2 --verbose --scriptPath=/opt/wrieTo/recordingScript/ --recordingsPath=/opt/writeTo/recordings/"
+            - /home/cfsd:/home/cfsd
+        command: "recorder --cid=219 --freq=2 --scriptPath=/home/cfsd/scripts/ --recordingsPath=/home/cfsd/recordings/"
