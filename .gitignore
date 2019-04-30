@@ -1,5 +1,9 @@
 # Ignore vscode
 .vscode/
+
+# Ignore build folder
+build/
+
 # Prerequisites
 *.d
 
