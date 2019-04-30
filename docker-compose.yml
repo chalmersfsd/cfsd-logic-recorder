@@ -2,7 +2,7 @@ version: '2'
 
 services:
     cfsd-recorder:
-        image: lowitz/recorder:v0.0.0
+        image: chalmersfsd/cfsd-logic-recorder:v0.0.1
         network_mode: "host"
         volumes:
             - /home/cfsd:/home/cfsd
